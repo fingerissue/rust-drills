@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>rust-drills</title>
+<style>
+  :root {
+    --bg: #1e1e2e;
+    --bg-alt: #262638;
+    --card: #2a2a3e;
+    --text: #e4e4f0;
+    --text-dim: #9999b0;
+    --accent: #f0883e;
+    --accent2: #6bcB77;
+    --border: #3a3a52;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Malgun Gothic", sans-serif;
+    height: 100%;
+  }
+  header {
+    padding: 16px 16px 12px;
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; background: var(--bg); z-index: 10;
+  }
+  header h1 { margin: 0; font-size: 1.2rem; }
+  header p { margin: 4px 0 0; color: var(--text-dim); font-size: 0.85rem; }
+
+  #chapter-list { padding: 12px; }
+  .chapter { margin-bottom: 10px; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+  .chapter-header {
+    padding: 12px 14px; background: var(--bg-alt); cursor: pointer;
+    display: flex; justify-content: space-between; align-items: center;
+    font-weight: 600; font-size: 0.95rem;
+  }
+  .chapter-header .arrow { transition: transform 0.15s; color: var(--text-dim); }
+  .chapter.open .chapter-header .arrow { transform: rotate(90deg); }
+  .section-list { display: none; }
+  .chapter.open .section-list { display: block; }
+  .section-item {
+    padding: 12px 16px; border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+    cursor: pointer; font-size: 0.9rem;
+  }
+  .section-item:active { background: var(--bg-alt); }
+  .badge {
+    font-size: 0.7rem; padding: 2px 8px; border-radius: 999px;
+    background: var(--border); color: var(--text-dim);
+  }
+  .badge.note { color: var(--accent2); }
+  .badge.code { color: var(--accent); }
+
+  /* Detail view */
+  #detail {
+    display: none;
+    position: fixed; inset: 0; background: var(--bg); z-index: 20;
+    flex-direction: column;
+  }
+  #detail.open { display: flex; }
+  #detail-header {
+    padding: 12px 14px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 10px;
+    background: var(--bg-alt);
+  }
+  #back-btn {
+    background: none; border: none; color: var(--text); font-size: 1.3rem;
+    cursor: pointer; padding: 4px 8px;
+  }
+  #detail-title { font-size: 0.95rem; font-weight: 600; flex: 1; }
+  #detail-body { flex: 1; overflow-y: auto; padding: 12px; }
+
+  .tab-bar { display: flex; gap: 8px; margin-bottom: 10px; }
+  .tab-btn {
+    flex: 1; padding: 8px; border-radius: 8px; border: 1px solid var(--border);
+    background: var(--bg-alt); color: var(--text-dim); font-size: 0.85rem; cursor: pointer;
+  }
+  .tab-btn.active { background: var(--accent); color: #1e1e2e; border-color: var(--accent); font-weight: 600; }
+
+  textarea {
+    width: 100%; min-height: 55vh; background: var(--card); color: var(--text);
+    border: 1px solid var(--border); border-radius: 10px; padding: 12px;
+    font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 0.82rem;
+    line-height: 1.5; resize: vertical; white-space: pre;
+  }
+  .note-content {
+    background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+    padding: 14px; font-size: 0.9rem; line-height: 1.7; white-space: pre-wrap;
+  }
+  .note-content code {
+    background: var(--bg-alt); padding: 1px 5px; border-radius: 4px;
+    font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 0.85em;
+  }
+
+  .action-bar { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+  .action-btn {
+    flex: 1; min-width: 140px; padding: 12px; border-radius: 10px; border: none;
+    font-size: 0.9rem; font-weight: 600; cursor: pointer; text-align: center;
+  }
+  .action-btn.primary { background: var(--accent); color: #1e1e2e; }
+  .action-btn.secondary { background: var(--bg-alt); color: var(--text); border: 1px solid var(--border); }
+
+  footer { text-align: center; color: var(--text-dim); font-size: 0.75rem; padding: 20px 12px 40px; }
+  a { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🦀 rust-drills</h1>
+  <p>Just Do Rust 복습용 문제 · 탭해서 풀고 Playground에서 실행</p>
+</header>
+
+<div id="chapter-list"></div>
+
+<footer>
+  <a href="https://wikidocs.net/book/16747" target="_blank">Just Do Rust (위키독스)</a> 복습용 ·
+  문제는 Claude가 작성 ·
+  <a href="https://github.com/fingerissue/rust-drills" target="_blank">GitHub 레포</a>
+</footer>
+
+<div id="detail">
+  <div id="detail-header">
+    <button id="back-btn">←</button>
+    <div id="detail-title"></div>
+  </div>
+  <div id="detail-body"></div>
+</div>
+
+<script src="data.js"></script>
+<script>
+const listEl = document.getElementById('chapter-list');
+const detailEl = document.getElementById('detail');
+const detailTitle = document.getElementById('detail-title');
+const detailBody = document.getElementById('detail-body');
+
+function escapeHtml(s) {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+// simple markdown-ish renderer for note sections (headers, code blocks, bold)
+function renderNote(md) {
+  let html = escapeHtml(md);
+  html = html.replace(/```[\s\S]*?```/g, m => {
+    const code = m.replace(/```rust|```/g, '').trim();
+    return '<pre style="background:#1e1e2e;padding:10px;border-radius:8px;overflow-x:auto;"><code>' + code + '</code></pre>';
+  });
+  html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+  html = html.replace(/^### (.*)$/gm, '<h4>$1</h4>');
+  html = html.replace(/^## (.*)$/gm, '<h3>$1</h3>');
+  html = html.replace(/^# (.*)$/gm, '<h2>$1</h2>');
+  html = html.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+  html = html.replace(/^- \[ \] (.*)$/gm, '☐ $1');
+  html = html.replace(/^- \[x\] (.*)$/gm, '☑ $1');
+  return html;
+}
+
+function buildChapterList() {
+  RUST_DRILLS_DATA.forEach((chapter, ci) => {
+    const chDiv = document.createElement('div');
+    chDiv.className = 'chapter' + (ci === RUST_DRILLS_DATA.length - 1 ? ' open' : '');
+    const header = document.createElement('div');
+    header.className = 'chapter-header';
+    header.innerHTML = `<span>${chapter.title}</span><span class="arrow">▶</span>`;
+    header.onclick = () => chDiv.classList.toggle('open');
+    chDiv.appendChild(header);
+
+    const secList = document.createElement('div');
+    secList.className = 'section-list';
+    chapter.sections.forEach((sec, si) => {
+      const item = document.createElement('div');
+      item.className = 'section-item';
+      const badge = sec.type === 'code' ? '<span class="badge code">문제</span>' : '<span class="badge note">개념</span>';
+      item.innerHTML = `<span>${sec.title}</span>${badge}`;
+      item.onclick = () => openDetail(ci, si);
+      secList.appendChild(item);
+    });
+    chDiv.appendChild(secList);
+    listEl.appendChild(chDiv);
+  });
+}
+
+function playgroundUrl(code) {
+  const encoded = encodeURIComponent(code);
+  return `https://play.rust-lang.org/?version=stable&edition=2021&mode=debug&code=${encoded}`;
+}
+
+let currentTab = 'problem';
+
+function openDetail(ci, si) {
+  const chapter = RUST_DRILLS_DATA[ci];
+  const sec = chapter.sections[si];
+  detailTitle.textContent = sec.title;
+  detailBody.innerHTML = '';
+
+  if (sec.type === 'note') {
+    const div = document.createElement('div');
+    div.className = 'note-content';
+    div.innerHTML = renderNote(sec.note);
+    detailBody.appendChild(div);
+  } else {
+    currentTab = 'problem';
+
+    const tabBar = document.createElement('div');
+    tabBar.className = 'tab-bar';
+    tabBar.innerHTML = `
+      <button class="tab-btn active" data-tab="problem">문제 (TODO)</button>
+      <button class="tab-btn" data-tab="answer">정답 보기</button>
+    `;
+    detailBody.appendChild(tabBar);
+
+    const textarea = document.createElement('textarea');
+    textarea.value = sec.problem;
+    detailBody.appendChild(textarea);
+
+    const actionBar = document.createElement('div');
+    actionBar.className = 'action-bar';
+    actionBar.innerHTML = `
+      <button class="action-btn primary" id="run-btn">▶ Rust Playground에서 실행</button>
+      <button class="action-btn secondary" id="reset-btn">↺ 초기화</button>
+    `;
+    detailBody.appendChild(actionBar);
+
+    tabBar.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.onclick = () => {
+        tabBar.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentTab = btn.dataset.tab;
+        textarea.value = currentTab === 'problem' ? sec.problem : sec.answer;
+      };
+    });
+
+    document.getElementById('run-btn').onclick = () => {
+      window.open(playgroundUrl(textarea.value), '_blank');
+    };
+    document.getElementById('reset-btn').onclick = () => {
+      textarea.value = currentTab === 'problem' ? sec.problem : sec.answer;
+    };
+  }
+
+  detailEl.classList.add('open');
+  window.scrollTo(0, 0);
+}
+
+document.getElementById('back-btn').onclick = () => {
+  detailEl.classList.remove('open');
+};
+
+buildChapterList();
+</script>
+
+</body>
+</html>
