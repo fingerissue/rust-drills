@@ -3,7 +3,7 @@
 위키독스 "Just Do Rust - 러스트 기초부터 고급까지" (지은이: 박희진, 박지헌, https://wikidocs.net/book/16747) 를
 읽으면서 챕터별로 복습 문제를 풀어보기 위한 개인 학습용 레포다.
 
-문제는 Claude(Anthropic)가 책 목차와 본문을 참고해서 만들었다.
+기획/구조 설계: [@fingerissue](https://github.com/fingerissue) · 문제 작성: Claude(Anthropic)가 책 목차와 본문을 참고해서 만들었다.
 
 ## 구조
 
