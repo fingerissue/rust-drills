@@ -19,8 +19,8 @@ const RUST_DRILLS_DATA = [
       {
         "title": "1.3 첫 번째 프로그래밍 - Hello world",
         "type": "code",
-        "problem": "// 1.3 첫 번째 프로그래밍: Hello world\n// 실행: rustc problem.rs -o problem && ./problem\n//\n// [문제] cargo new 로 프로젝트를 만들면 src/main.rs 에 자동 생성되는\n// 그 유명한 코드를 그대로 작성해봐라. \"Hello, world!\" 를 화면에 출력하면 끝.\nfn main() {\n    // TODO: 여기에 println! 매크로로 \"Hello, world!\" 출력\n}\n",
-        "answer": "// 1.3 첫 번째 프로그래밍: Hello world - 정답\nfn main() {\n    println!(\"Hello, world!\");\n}\n",
+        "problem": "// 1.3 첫 번째 프로그래밍: Hello world\n// 실행: rustc problem.rs -o problem && ./problem\n//\n// [문제] cargo new 로 프로젝트를 만들면 src/main.rs 에 자동 생성되는\n// 그 유명한 \"Hello, world!\" 를 반환하는 함수를 완성해라.\nfn hello_message() -> String {\n    todo!()\n}\n\nfn main() {\n    println!(\"{}\", hello_message());\n    assert_eq!(hello_message(), \"Hello, world!\");\n    println!(\"✅ 통과\");\n}\n",
+        "answer": "// 1.3 첫 번째 프로그래밍: Hello world - 정답\nfn hello_message() -> String {\n    \"Hello, world!\".to_string()\n}\n\nfn main() {\n    println!(\"{}\", hello_message());\n    assert_eq!(hello_message(), \"Hello, world!\");\n    println!(\"✅ 통과\");\n}\n",
         "note": ""
       }
     ]

@@ -1,0 +1,23 @@
+name: Grade Submission
+
+on:
+  push:
+    branches: [ grass ]
+
+jobs:
+  grade:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Show Rust version
+        run: rustc --version && cargo --version
+
+      - name: Grade changed problem.rs files
+        env:
+          BEFORE_SHA: ${{ github.event.before }}
+          AFTER_SHA: ${{ github.sha }}
+        run: python3 scripts/grade_changed.py

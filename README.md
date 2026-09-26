@@ -5,6 +5,16 @@
 
 기획/구조 설계: [@fingerissue](https://github.com/fingerissue) · 문제 작성: Claude(Anthropic)가 책 목차와 본문을 참고해서 만들었다.
 
+## 브랜치 구조
+
+- **`grass`** (기본 브랜치, 지금 보고 있는 이 브랜치): 실제로 문제를 풀고 제출(커밋)하는 곳.
+  커밋 하나하나가 "그날 이만큼 풀었다"는 진짜 학습 기록이자 잔디.
+- **[`seed`](https://github.com/fingerissue/rust-drills/tree/seed)**: 문제은행이 막 완성된 시점(전부 `todo!()`로 빈 상태)의 스냅샷.
+  건드리지 않고 그대로 얼려둔 브랜치라, "이 문제 원래 모양이 뭐였지" 확인하거나 처음부터 다시 풀고 싶을 때 참고.
+
+`grass`에 `problem.rs`를 제출(커밋)하면 GitHub Actions가 자동으로 컴파일/실행해서 통과 여부를 판정한다
+(아래 "자동 채점" 참고).
+
 ## 구조
 
 책의 목차를 그대로 따라간다.
@@ -81,6 +91,16 @@ Playground에서 그대로 실행되지 않을 수 있음 - 로컬 cargo 사용 
 - [x] 06. 고급 II: 라이브러리 활용 (문제은행 기준 완료 — 책 목차 전체 커버)
 
 책 목차 기준 문제은행은 이걸로 전부 완성. 이제부터는 진도에 맞춰 직접 풀고 커밋하는 단계.
+
+## 자동 채점 (GitHub Actions)
+
+`grass` 브랜치에 `problem.rs` 파일을 수정해서 push하면 `.github/workflows/grade.yml`이 트리거돼서:
+1. 변경된 `problem.rs` 파일들을 찾고
+2. (표준 폴더면) `rustc`로 컴파일 후 실행, (Cargo 프로젝트면 - 5.5, 06장) 해당 `--bin`으로 `cargo run`
+3. `main()` 안의 `assert_eq!`들이 전부 통과하면 exit 0(✅), 하나라도 실패하면 exit 1(❌)
+
+이 결과는 커밋의 체크(check)로 남기 때문에, GitHub 커밋 목록이나 PR 화면에서 초록 체크/빨간 X로 바로 보이고,
+웹페이지에서도 Checks API로 조회해서 통과 여부를 보여준다.
 
 ## 학습 방식 안내
 
