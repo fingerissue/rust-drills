@@ -51,7 +51,7 @@ rustc problem.rs -o problem && ./problem
 - [x] 01. 프로그래밍 환경 구축하기
 - [x] 02. 입문
 - [x] 03. 초급: Rust 기본 문법
-- [ ] 04. 중급: Rust 특징
+- [x] 04. 중급: Rust 특징
 - [ ] 05. 고급 I: Rust 응용 필수
 - [ ] 06. 고급 II: 라이브러리 활용
 
