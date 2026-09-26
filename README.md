@@ -44,12 +44,29 @@ cargo run --bin problem   # 문제 풀기
 cargo run --bin answer    # 정답 확인
 ```
 
+`06. 고급 II 라이브러리 활용`은 챕터 전체(6.1, 6.2, 6.3, 6.6)가 외부 크레이트(rand, sha2, aes-gcm,
+reqwest, scraper, axum, tokio, rusqlite)를 필요로 해서, 챕터 폴더 하나를 통째로 Cargo 프로젝트로 묶었다
+(서브폴더마다 따로 만들면 의존성이 중복 컴파일돼서 비효율적):
+```bash
+cd "06. 고급 II 라이브러리 활용"
+cargo run --bin c61_problem   # 6.1 암호화
+cargo run --bin c62_problem   # 6.2 웹 크롤링
+cargo run --bin c63_problem   # 6.3 웹 서버
+cargo run --bin c66_problem   # 6.6 데이터베이스
+# answer 버전은 c61_answer, c62_answer 처럼 접미어만 바꾸면 됨
+```
+- `6.2 웹 크롤링`은 실제 인터넷 대신 로컬에 임시 HTTP 서버를 띄워서 크롤링 대상으로 삼는다(오프라인에서도 동작).
+- `6.6 데이터베이스`는 책의 SeaORM+MySQL 대신, 서버 설치가 필요 없는 SQLite(rusqlite)로 같은 패턴
+  (연결, Raw SQL, 파라미터 바인딩)을 연습한다. 쿼리 패턴 자체는 MySQL로 옮겨도 거의 동일하다.
+- `6.4 GUI 프로그래밍`, `6.5 웹 어셈블리`는 이 환경에 디스플레이/브라우저가 없어서 자동 실행 검증이 불가능해
+  코드 문제 대신 `개념정리.md` 노트로 대체했다.
+
 ### 웹 (모바일 포함)
 **https://fingerissue.github.io/rust-drills/** 에서 챕터별로 문제를 보고, 에디터에서 바로 TODO를 채운 뒤
 "Rust Playground에서 실행" 버튼으로 실제 컴파일/실행 결과를 확인할 수 있다.
 (GitHub Pages는 정적 호스팅이라 브라우저 안에서 직접 컴파일은 불가능해서, 탭 한 번으로 Rust Playground로
-코드를 들고가는 방식으로 동작함. 단, `5.5 비동기 프로그래밍`은 tokio 의존성 때문에 Playground에서 그대로
-실행되지 않을 수 있음 - 로컬 cargo 사용 권장)
+코드를 들고가는 방식으로 동작함. 단, `5.5`, `6.1`, `6.2`, `6.3`, `6.6`처럼 외부 크레이트가 필요한 문제는
+Playground에서 그대로 실행되지 않을 수 있음 - 로컬 cargo 사용 권장)
 
 `docs/data.js` 는 각 챕터 폴더의 `problem.rs` / `answer.rs` / `.md` 내용을 그대로 모아놓은 파일이라,
 새 챕터를 추가할 때마다 `gen_data.py` 스크립트로 재생성해야 한다.
@@ -61,9 +78,9 @@ cargo run --bin answer    # 정답 확인
 - [x] 03. 초급: Rust 기본 문법
 - [x] 04. 중급: Rust 특징
 - [x] 05. 고급 I: Rust 응용 필수
-- [ ] 06. 고급 II: 라이브러리 활용
+- [x] 06. 고급 II: 라이브러리 활용 (문제은행 기준 완료 — 책 목차 전체 커버)
 
-책 진도 나가는 대로 챕터 하나씩 추가하는 방식으로 운영한다.
+책 목차 기준 문제은행은 이걸로 전부 완성. 이제부터는 진도에 맞춰 직접 풀고 커밋하는 단계.
 
 ## 학습 방식 안내
 

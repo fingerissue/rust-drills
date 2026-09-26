@@ -1,0 +1,45 @@
+[package]
+name = "advanced2_drills"
+version = "0.1.0"
+edition = "2021"
+
+# 6장은 전부 외부 크레이트가 필요해서 챕터 전체를 하나의 Cargo 프로젝트로 묶었다.
+# (5.5처럼 서브폴더마다 따로 Cargo.toml 만들면 의존성 중복 컴파일이 심해서 비효율적)
+[[bin]]
+name = "c61_problem"
+path = "6.1 암호화/problem.rs"
+[[bin]]
+name = "c61_answer"
+path = "6.1 암호화/answer.rs"
+
+[[bin]]
+name = "c62_problem"
+path = "6.2 웹 크롤링/problem.rs"
+[[bin]]
+name = "c62_answer"
+path = "6.2 웹 크롤링/answer.rs"
+
+[[bin]]
+name = "c63_problem"
+path = "6.3 웹 서버/problem.rs"
+[[bin]]
+name = "c63_answer"
+path = "6.3 웹 서버/answer.rs"
+
+[[bin]]
+name = "c66_problem"
+path = "6.6 데이터베이스/problem.rs"
+[[bin]]
+name = "c66_answer"
+path = "6.6 데이터베이스/answer.rs"
+
+[dependencies]
+rand = "0.8"
+sha2 = "0.10"
+aes-gcm = "0.10"
+reqwest = { version = "0.11", default-features = false, features = ["blocking", "json"] }
+scraper = "0.17"
+axum = "0.6"
+tokio = { version = "1", features = ["full"] }
+rusqlite = { version = "0.31", features = ["bundled"] }
+serde_json = "1"
