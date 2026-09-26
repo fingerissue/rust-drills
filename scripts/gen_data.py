@@ -16,6 +16,12 @@ for chapter_dir in sorted(os.listdir(ROOT)):
             continue
         problem_path = os.path.join(full_sub, "problem.rs")
         answer_path = os.path.join(full_sub, "answer.rs")
+        # cargo 프로젝트로 구성된 폴더(예: 5.5)는 src/bin/ 아래에 있음
+        if not os.path.exists(problem_path):
+            alt_problem = os.path.join(full_sub, "src", "bin", "problem.rs")
+            alt_answer = os.path.join(full_sub, "src", "bin", "answer.rs")
+            if os.path.exists(alt_problem):
+                problem_path, answer_path = alt_problem, alt_answer
         section = {"title": sub_dir, "type": "code", "problem": "", "answer": "", "note": ""}
         if os.path.exists(problem_path):
             with open(problem_path, encoding="utf-8") as f:

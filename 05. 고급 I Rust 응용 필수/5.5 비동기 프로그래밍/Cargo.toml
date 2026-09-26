@@ -1,0 +1,15 @@
+[package]
+name = "async_drills"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "answer"
+path = "src/bin/answer.rs"
+
+[[bin]]
+name = "problem"
+path = "src/bin/problem.rs"
+
+[dependencies]
+tokio = { version = "1", features = ["full"] }
