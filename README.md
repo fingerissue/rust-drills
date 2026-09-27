@@ -1,85 +1,52 @@
-# Just Do Rust 복습용 레포 — `seed` 브랜치
+# 🦀 rust-drills — `seed` 브랜치
 
-> ⚠️ 이 브랜치는 **문제은행이 막 완성된 시점의 스냅샷**을 그대로 얼려둔 브랜치다.
-> 여기엔 아무것도 안 풀려있고(전부 `todo!()`), 앞으로도 이 브랜치엔 진행 상황을 커밋하지 않는다.
+> ⚠️ **이 브랜치엔 커밋하지 않는다.** 문제은행이 막 완성된 시점(전부 `todo!()`, 아무것도 안 풀림)의
+> 스냅샷을 그대로 얼려둔 보관용 브랜치다.
 >
-> **실제로 문제를 풀고 커밋하는 곳은 [`grass`](https://github.com/fingerissue/rust-drills/tree/grass) 브랜치**다.
-> (Actions 자동 채점, 웹페이지, 진행 상황 체크리스트도 전부 `grass` 쪽에 있음)
->
-> 이 브랜치는 다음 용도로만 쓴다:
-> - "이 문제 원래 모양이 뭐였지?" 확인하고 싶을 때
-> - 어떤 챕터를 처음부터 완전히 다시 풀고 싶을 때 (여기서 해당 폴더만 복사해가면 됨)
+> 실제로 문제를 풀고 커밋하는 곳은 **[`grass`](https://github.com/fingerissue/rust-drills/tree/grass) 브랜치**
+> (기본 브랜치)다. 웹페이지, Actions 자동 채점, 진행 상황도 전부 거기 있음.
 
-위키독스 "Just Do Rust - 러스트 기초부터 고급까지" (지은이: 박희진, 박지헌, https://wikidocs.net/book/16747) 를
-읽으면서 챕터별로 복습 문제를 풀어보기 위한 개인 학습용 레포다.
+## 🔗 바로가기
 
-기획/구조 설계: [@fingerissue](https://github.com/fingerissue) · 문제 작성: Claude(Anthropic)가 책 목차와 본문을 참고해서 만들었다.
+| | |
+|---|---|
+| 🌱 실제 풀이/커밋하는 브랜치 (`grass`) | https://github.com/fingerissue/rust-drills/tree/grass |
+| 🌐 웹에서 풀기 | https://fingerissue.github.io/rust-drills/ |
 
-## 구조
+## 이 브랜치는 언제 쓰나
 
-책의 목차를 그대로 따라간다.
+- "이 문제 원래 모양이 뭐였지?" 확인하고 싶을 때
+- 어떤 챕터를 처음부터 완전히 다시 풀고 싶을 때 (여기서 해당 폴더만 복사해가면 됨)
+
+---
+
+위키독스 [Just Do Rust - 러스트 기초부터 고급까지](https://wikidocs.net/book/16747)를 읽으면서
+챕터별로 복습 문제를 풀어보기 위한 개인 학습용 레포.
+
+## 폴더 구조
+
+책의 목차를 그대로 따라간다. 너무 잘게 쪼개진 하위 목차(예: 3.6.1~3.6.5)는 상위 목차 하나로 합쳤다.
 
 ```
-01. 프로그래밍 환경 구축하기/
-  1.1 Rust 설치하기/
-  1.2 VS Code 설치하기/
-  1.3 첫 번째 프로그래밍 - Hello world/
-02. 입문/
-  2.1 무작정 따라하며 Rust 코드 짜 보기/
-  2.2 작성한 코드 이해하기/
+01. 프로그래밍 환경 구축하기/         (1.1 ~ 1.3)
+02. 입문/                          (2.1 ~ 2.2)
+03. 초급 Rust 기본 문법/            (3.1 ~ 3.9, 9개 섹션)
+04. 중급 Rust 특징/                 (4.1 ~ 4.9, 9개 섹션)
+05. 고급 I Rust 응용 필수/           (5.1 ~ 5.6, 5.5만 별도 Cargo 프로젝트)
+06. 고급 II 라이브러리 활용/         (6.1~6.3, 6.6은 코드 / 6.4, 6.5는 개념정리.md)
 ```
 
-각 하위 폴더에는 보통 두 개의 파일이 있다:
-- `problem.rs` — `TODO` / `todo!()` 부분을 채우면서 푸는 문제 파일
-- `answer.rs` — 막혔을 때만 보는 정답 파일
+각 하위 폴더는 보통 `problem.rs`(TODO를 채우는 문제) + `answer.rs`(정답) 짝으로 구성되고,
+코드가 없는 챕터나 개념 위주 챕터는 `개념정리.md` / `체크리스트.md`로 대체했다.
+모든 문제는 책(PDF) 없이 `problem.rs` 안의 설명만 보고 풀 수 있게 자기완결적으로 작성함.
 
-환경 구축처럼 코드가 없는 챕터(1.1, 1.2)나 개념 위주 챕터(3.4 등)는 `.md` 노트 파일로 대체.
-너무 잘게 쪼개진 하위 목차(예: 3.6.1~3.6.5 제어문)는 상위 목차(3.6) 하나로 합쳐서 문제를 5~6개씩 담았다.
+## 실행법 (참고용)
 
-모든 문제는 책(PDF)이 없어도 `problem.rs` 파일 안의 설명만 보고 풀 수 있도록 자기완결적으로 작성함.
-
-## 사용법
-
-### 로컬
-대부분의 폴더에서:
 ```bash
 rustc problem.rs -o problem && ./problem
 ```
-로 실행하면서 TODO를 채워나가면 된다.
-
-예외적으로 `5.5 비동기 프로그래밍`은 tokio 크레이트가 필요해서 그 폴더 자체가 독립된 Cargo 프로젝트다:
-```bash
-cd "05. 고급 I Rust 응용 필수/5.5 비동기 프로그래밍"
-cargo run --bin problem   # 문제 풀기
-cargo run --bin answer    # 정답 확인
-```
-
-`06. 고급 II 라이브러리 활용`은 챕터 전체(6.1, 6.2, 6.3, 6.6)가 외부 크레이트(rand, sha2, aes-gcm,
-reqwest, scraper, axum, tokio, rusqlite)를 필요로 해서, 챕터 폴더 하나를 통째로 Cargo 프로젝트로 묶었다
-(서브폴더마다 따로 만들면 의존성이 중복 컴파일돼서 비효율적):
-```bash
-cd "06. 고급 II 라이브러리 활용"
-cargo run --bin c61_problem   # 6.1 암호화
-cargo run --bin c62_problem   # 6.2 웹 크롤링
-cargo run --bin c63_problem   # 6.3 웹 서버
-cargo run --bin c66_problem   # 6.6 데이터베이스
-# answer 버전은 c61_answer, c62_answer 처럼 접미어만 바꾸면 됨
-```
-- `6.2 웹 크롤링`은 실제 인터넷 대신 로컬에 임시 HTTP 서버를 띄워서 크롤링 대상으로 삼는다(오프라인에서도 동작).
-- `6.6 데이터베이스`는 책의 SeaORM+MySQL 대신, 서버 설치가 필요 없는 SQLite(rusqlite)로 같은 패턴
-  (연결, Raw SQL, 파라미터 바인딩)을 연습한다. 쿼리 패턴 자체는 MySQL로 옮겨도 거의 동일하다.
-- `6.4 GUI 프로그래밍`, `6.5 웹 어셈블리`는 이 환경에 디스플레이/브라우저가 없어서 자동 실행 검증이 불가능해
-  코드 문제 대신 `개념정리.md` 노트로 대체했다.
-
-### 웹 (모바일 포함)
-**https://fingerissue.github.io/rust-drills/** 에서 챕터별로 문제를 보고, 에디터에서 바로 TODO를 채운 뒤
-"Rust Playground에서 실행" 버튼으로 실제 컴파일/실행 결과를 확인할 수 있다.
-(GitHub Pages는 정적 호스팅이라 브라우저 안에서 직접 컴파일은 불가능해서, 탭 한 번으로 Rust Playground로
-코드를 들고가는 방식으로 동작함. 단, `5.5`, `6.1`, `6.2`, `6.3`, `6.6`처럼 외부 크레이트가 필요한 문제는
-Playground에서 그대로 실행되지 않을 수 있음 - 로컬 cargo 사용 권장)
-
-`docs/data.js` 는 각 챕터 폴더의 `problem.rs` / `answer.rs` / `.md` 내용을 그대로 모아놓은 파일이라,
-새 챕터를 추가할 때마다 `gen_data.py` 스크립트로 재생성해야 한다.
+`5.5`, `06장`은 외부 크레이트가 필요해서 각각 독립 Cargo 프로젝트다 — 자세한 건
+[`grass`의 README](https://github.com/fingerissue/rust-drills/blob/grass/README.md) 참고.
 
 ## 이 스냅샷 시점 기준 완성 범위
 
@@ -90,4 +57,8 @@ Playground에서 그대로 실행되지 않을 수 있음 - 로컬 cargo 사용 
 - [x] 05. 고급 I: Rust 응용 필수
 - [x] 06. 고급 II: 라이브러리 활용 (문제은행 기준 완료 — 책 목차 전체 커버)
 
-실제 풀이 진행 상황은 이 브랜치가 아니라 [`grass`](https://github.com/fingerissue/rust-drills/tree/grass) 브랜치에서 확인.
+실제 풀이 진행 상황은 [`grass`](https://github.com/fingerissue/rust-drills/tree/grass) 브랜치에서 확인.
+
+---
+
+기획/구조 설계: [@fingerissue](https://github.com/fingerissue) · 문제 작성: Claude(Anthropic)가 책 목차와 본문을 참고해서 만듦.
