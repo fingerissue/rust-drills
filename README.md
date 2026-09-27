@@ -1,85 +1,19 @@
-# Just Do Rust 복습용 레포
+# 🦀 rust-drills
 
-위키독스 "Just Do Rust - 러스트 기초부터 고급까지" (지은이: 박희진, 박지헌, https://wikidocs.net/book/16747) 를
-읽으면서 챕터별로 복습 문제를 풀어보기 위한 개인 학습용 레포다.
+위키독스 [Just Do Rust - 러스트 기초부터 고급까지](https://wikidocs.net/book/16747)를 읽으면서
+챕터별로 복습 문제를 직접 풀어보기 위한 개인 학습용 레포.
 
-기획/구조 설계: [@fingerissue](https://github.com/fingerissue) · 문제 작성: Claude(Anthropic)가 책 목차와 본문을 참고해서 만들었다.
+**여기(`grass`)가 실제로 문제를 풀고 커밋하는 브랜치다.** 커밋 하나하나가 "그날 이만큼 풀었다"는 학습 기록이자 잔디.
 
-## 브랜치 구조
+## 🔗 바로가기
 
-- **`grass`** (기본 브랜치, 지금 보고 있는 이 브랜치): 실제로 문제를 풀고 제출(커밋)하는 곳.
-  커밋 하나하나가 "그날 이만큼 풀었다"는 진짜 학습 기록이자 잔디.
-- **[`seed`](https://github.com/fingerissue/rust-drills/tree/seed)**: 문제은행이 막 완성된 시점(전부 `todo!()`로 빈 상태)의 스냅샷.
-  건드리지 않고 그대로 얼려둔 브랜치라, "이 문제 원래 모양이 뭐였지" 확인하거나 처음부터 다시 풀고 싶을 때 참고.
+| | |
+|---|---|
+| 🌐 웹에서 풀기 (모바일 포함) | https://fingerissue.github.io/rust-drills/ |
+| 📦 원본 문제은행 (`seed`, 전부 미해결 상태) | https://github.com/fingerissue/rust-drills/tree/seed |
+| ⚙️ 채점 현황 (Actions) | https://github.com/fingerissue/rust-drills/actions |
 
-`grass`에 `problem.rs`를 제출(커밋)하면 GitHub Actions가 자동으로 컴파일/실행해서 통과 여부를 판정한다
-(아래 "자동 채점" 참고).
-
-## 구조
-
-책의 목차를 그대로 따라간다.
-
-```
-01. 프로그래밍 환경 구축하기/
-  1.1 Rust 설치하기/
-  1.2 VS Code 설치하기/
-  1.3 첫 번째 프로그래밍 - Hello world/
-02. 입문/
-  2.1 무작정 따라하며 Rust 코드 짜 보기/
-  2.2 작성한 코드 이해하기/
-```
-
-각 하위 폴더에는 보통 두 개의 파일이 있다:
-- `problem.rs` — `TODO` / `todo!()` 부분을 채우면서 푸는 문제 파일
-- `answer.rs` — 막혔을 때만 보는 정답 파일
-
-환경 구축처럼 코드가 없는 챕터(1.1, 1.2)나 개념 위주 챕터(3.4 등)는 `.md` 노트 파일로 대체.
-너무 잘게 쪼개진 하위 목차(예: 3.6.1~3.6.5 제어문)는 상위 목차(3.6) 하나로 합쳐서 문제를 5~6개씩 담았다.
-
-모든 문제는 책(PDF)이 없어도 `problem.rs` 파일 안의 설명만 보고 풀 수 있도록 자기완결적으로 작성함.
-
-## 사용법
-
-### 로컬
-대부분의 폴더에서:
-```bash
-rustc problem.rs -o problem && ./problem
-```
-로 실행하면서 TODO를 채워나가면 된다.
-
-예외적으로 `5.5 비동기 프로그래밍`은 tokio 크레이트가 필요해서 그 폴더 자체가 독립된 Cargo 프로젝트다:
-```bash
-cd "05. 고급 I Rust 응용 필수/5.5 비동기 프로그래밍"
-cargo run --bin problem   # 문제 풀기
-cargo run --bin answer    # 정답 확인
-```
-
-`06. 고급 II 라이브러리 활용`은 챕터 전체(6.1, 6.2, 6.3, 6.6)가 외부 크레이트(rand, sha2, aes-gcm,
-reqwest, scraper, axum, tokio, rusqlite)를 필요로 해서, 챕터 폴더 하나를 통째로 Cargo 프로젝트로 묶었다
-(서브폴더마다 따로 만들면 의존성이 중복 컴파일돼서 비효율적):
-```bash
-cd "06. 고급 II 라이브러리 활용"
-cargo run --bin c61_problem   # 6.1 암호화
-cargo run --bin c62_problem   # 6.2 웹 크롤링
-cargo run --bin c63_problem   # 6.3 웹 서버
-cargo run --bin c66_problem   # 6.6 데이터베이스
-# answer 버전은 c61_answer, c62_answer 처럼 접미어만 바꾸면 됨
-```
-- `6.2 웹 크롤링`은 실제 인터넷 대신 로컬에 임시 HTTP 서버를 띄워서 크롤링 대상으로 삼는다(오프라인에서도 동작).
-- `6.6 데이터베이스`는 책의 SeaORM+MySQL 대신, 서버 설치가 필요 없는 SQLite(rusqlite)로 같은 패턴
-  (연결, Raw SQL, 파라미터 바인딩)을 연습한다. 쿼리 패턴 자체는 MySQL로 옮겨도 거의 동일하다.
-- `6.4 GUI 프로그래밍`, `6.5 웹 어셈블리`는 이 환경에 디스플레이/브라우저가 없어서 자동 실행 검증이 불가능해
-  코드 문제 대신 `개념정리.md` 노트로 대체했다.
-
-### 웹 (모바일 포함)
-**https://fingerissue.github.io/rust-drills/** 에서 챕터별로 문제를 보고, 에디터에서 바로 TODO를 채운 뒤
-"Rust Playground에서 실행" 버튼으로 실제 컴파일/실행 결과를 확인할 수 있다.
-(GitHub Pages는 정적 호스팅이라 브라우저 안에서 직접 컴파일은 불가능해서, 탭 한 번으로 Rust Playground로
-코드를 들고가는 방식으로 동작함. 단, `5.5`, `6.1`, `6.2`, `6.3`, `6.6`처럼 외부 크레이트가 필요한 문제는
-Playground에서 그대로 실행되지 않을 수 있음 - 로컬 cargo 사용 권장)
-
-`docs/data.js` 는 각 챕터 폴더의 `problem.rs` / `answer.rs` / `.md` 내용을 그대로 모아놓은 파일이라,
-새 챕터를 추가할 때마다 `gen_data.py` 스크립트로 재생성해야 한다.
+[![Grade Submission](https://github.com/fingerissue/rust-drills/actions/workflows/grade.yml/badge.svg?branch=grass)](https://github.com/fingerissue/rust-drills/actions/workflows/grade.yml)
 
 ## 진행 상황
 
@@ -88,22 +22,76 @@ Playground에서 그대로 실행되지 않을 수 있음 - 로컬 cargo 사용 
 - [x] 03. 초급: Rust 기본 문법
 - [x] 04. 중급: Rust 특징
 - [x] 05. 고급 I: Rust 응용 필수
-- [x] 06. 고급 II: 라이브러리 활용 (문제은행 기준 완료 — 책 목차 전체 커버)
+- [x] 06. 고급 II: 라이브러리 활용
 
-책 목차 기준 문제은행은 이걸로 전부 완성. 이제부터는 진도에 맞춰 직접 풀고 커밋하는 단계.
+문제은행(전체 목차)은 이미 완성된 상태고, 위 체크는 문제은행 기준이다.
+**실제로 "오늘 몇 챕터까지 풀었다"는 진도는 커밋 히스토리로 확인**하는 게 정확하다
+(문제은행에 올라가 있다고 그날 다 공부한 건 아님 — 업로드일 ≠ 학습일).
+
+## 폴더 구조
+
+책의 목차를 그대로 따라간다. 너무 잘게 쪼개진 하위 목차(예: 3.6.1~3.6.5)는 상위 목차 하나로 합쳤다.
+
+```
+01. 프로그래밍 환경 구축하기/
+  1.1 Rust 설치하기/            (체크리스트.md)
+  1.2 VS Code 설치하기/          (체크리스트.md)
+  1.3 첫 번째 프로그래밍 - Hello world/  (problem.rs, answer.rs)
+02. 입문/
+  2.1 무작정 따라하며 Rust 코드 짜 보기/
+  2.2 작성한 코드 이해하기/
+03. 초급 Rust 기본 문법/         (3.1 ~ 3.9, 9개 섹션)
+04. 중급 Rust 특징/              (4.1 ~ 4.9, 9개 섹션)
+05. 고급 I Rust 응용 필수/        (5.1 ~ 5.6, 5.5만 별도 Cargo 프로젝트)
+06. 고급 II 라이브러리 활용/      (6.1~6.3, 6.6은 코드 / 6.4, 6.5는 개념정리.md)
+```
+
+각 하위 폴더는 보통 `problem.rs`(TODO를 채우는 문제) + `answer.rs`(정답) 짝으로 구성되고,
+코드가 없는 챕터(1.1, 1.2)나 개념 위주 챕터(3.4, 6.4, 6.5)는 `개념정리.md` / `체크리스트.md`로 대체했다.
+모든 문제는 책(PDF) 없이 `problem.rs` 안의 설명만 보고 풀 수 있게 자기완결적으로 작성함.
+
+## 사용법
+
+### 로컬
+대부분의 폴더에서:
+```bash
+rustc problem.rs -o problem && ./problem
+```
+
+예외:
+- **`5.5 비동기 프로그래밍`**: tokio 필요, 그 폴더 자체가 독립 Cargo 프로젝트
+  ```bash
+  cd "05. 고급 I Rust 응용 필수/5.5 비동기 프로그래밍"
+  cargo run --bin problem
+  ```
+- **`06. 고급 II 라이브러리 활용`**: 챕터 전체(6.1, 6.2, 6.3, 6.6)가 외부 크레이트(rand, sha2, aes-gcm,
+  reqwest, scraper, axum, tokio, rusqlite) 필요, 챕터 폴더 하나가 통째로 Cargo 프로젝트
+  ```bash
+  cd "06. 고급 II 라이브러리 활용"
+  cargo run --bin c61_problem   # 6.1 암호화
+  cargo run --bin c62_problem   # 6.2 웹 크롤링
+  cargo run --bin c63_problem   # 6.3 웹 서버
+  cargo run --bin c66_problem   # 6.6 데이터베이스 (SeaORM+MySQL 대신 SQLite로 같은 패턴 연습)
+  ```
+
+### 웹 (모바일 포함)
+https://fingerissue.github.io/rust-drills/ 에서 챕터별 문제를 보고, 에디터에서 TODO를 채운 뒤
+"Rust Playground에서 실행" 버튼으로 컴파일/실행 결과를 확인할 수 있다.
+(정적 호스팅이라 브라우저 안에서 직접 컴파일은 불가 — 탭 한 번으로 Playground로 코드를 넘기는 방식.
+`5.5`, `6.1~6.3`, `6.6`처럼 외부 크레이트가 필요한 문제는 Playground에서 안 돌아갈 수 있어서 로컬 cargo 권장)
+
+`docs/data.js`는 각 폴더의 `problem.rs`/`answer.rs`/`.md`를 모아놓은 파일이라,
+새 챕터 추가 시 `python3 scripts/gen_data.py`로 재생성해야 한다.
 
 ## 자동 채점 (GitHub Actions)
 
-`grass` 브랜치에 `problem.rs` 파일을 수정해서 push하면 `.github/workflows/grade.yml`이 트리거돼서:
+`problem.rs`를 고쳐서 push하면 `.github/workflows/grade.yml`이 트리거돼서:
 1. 변경된 `problem.rs` 파일들을 찾고
-2. (표준 폴더면) `rustc`로 컴파일 후 실행, (Cargo 프로젝트면 - 5.5, 06장) 해당 `--bin`으로 `cargo run`
-3. `main()` 안의 `assert_eq!`들이 전부 통과하면 exit 0(✅), 하나라도 실패하면 exit 1(❌)
+2. 표준 폴더는 `rustc`로 컴파일 후 실행, Cargo 프로젝트(5.5, 06장)는 해당 `--bin`으로 `cargo run`
+3. `main()` 안의 `assert_eq!`가 전부 통과하면 ✅, 하나라도 실패(panic)하면 ❌
 
-이 결과는 커밋의 체크(check)로 남기 때문에, GitHub 커밋 목록이나 PR 화면에서 초록 체크/빨간 X로 바로 보이고,
-웹페이지에서도 Checks API로 조회해서 통과 여부를 보여준다.
+결과는 커밋의 체크(check)로 남아서 커밋 목록/PR 화면에서 바로 보이고, [Actions 탭](https://github.com/fingerissue/rust-drills/actions)에서 로그도 확인 가능.
 
-## 학습 방식 안내
+---
 
-이 레포는 책의 모든 챕터 문제은행을 미리 다 만들어두는 걸 목표로 한다.
-실제로 "이 챕터를 오늘 공부했다"는 커밋(잔디)은 책 진도에 맞춰 문제를 직접 풀고 본인이 커밋하는 방식으로 남긴다.
-(이미 문제은행에 올라가 있다고 해서 그날 다 공부한 건 아님 — 문제은행 업로드일 ≠ 실제 학습일)
+기획/구조 설계: [@fingerissue](https://github.com/fingerissue) · 문제 작성: Claude(Anthropic)가 책 목차와 본문을 참고해서 만듦.
