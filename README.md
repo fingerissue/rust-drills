@@ -34,7 +34,12 @@
 04. 중급 Rust 특징/                 (4.1 ~ 4.9, 9개 섹션)
 05. 고급 I Rust 응용 필수/           (5.1 ~ 5.6, 5.5만 별도 Cargo 프로젝트)
 06. 고급 II 라이브러리 활용/         (6.1~6.3, 6.6은 코드 / 6.4, 6.5는 개념정리.md)
+07. 부록/                          (책엔 없지만 필수급 개념 4개 - 7.1~7.4, 전부 개념설명.md 포함)
 ```
+
+`07. 부록`은 책 목차엔 없지만 실무에서 자주 쓰여서 추가한 챕터다: Rc/RefCell/Weak, 테스트(`#[test]`),
+타입 변환(From/Into/TryFrom), 클로저 심화(Fn/FnMut/FnOnce). 여기만 `problem.rs`/`answer.rs` 외에
+`개념설명.md`가 항상 같이 들어있다.
 
 각 하위 폴더는 보통 `problem.rs`(TODO를 채우는 문제) + `answer.rs`(정답) 짝으로 구성되고,
 코드가 없는 챕터나 개념 위주 챕터는 `개념정리.md` / `체크리스트.md`로 대체했다.
@@ -56,6 +61,7 @@ rustc problem.rs -o problem && ./problem
 - [x] 04. 중급: Rust 특징
 - [x] 05. 고급 I: Rust 응용 필수
 - [x] 06. 고급 II: 라이브러리 활용 (문제은행 기준 완료 — 책 목차 전체 커버)
+- [x] 07. 부록: Rc/RefCell/Weak, 테스트, From/Into, 클로저 심화
 
 실제 풀이 진행 상황은 [`grass`](https://github.com/fingerissue/rust-drills/tree/grass) 브랜치에서 확인.
 
