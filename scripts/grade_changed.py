@@ -63,13 +63,24 @@ def find_bin_name(cargo_root: str, rel_path: str) -> str | None:
 
 
 def grade_standalone(path: str) -> bool:
+    with open(path, encoding="utf-8") as f:
+        source = f.read()
+    is_test_file = "#[test]" in source
+
     binpath = "/tmp/graded_bin"
-    r = subprocess.run(["rustc", "--edition", "2021", path, "-o", binpath], capture_output=True, text=True)
+    args = ["rustc", "--edition", "2021"]
+    if is_test_file:
+        args.append("--test")
+    args += [path, "-o", binpath]
+
+    r = subprocess.run(args, capture_output=True, text=True)
     if r.returncode != 0:
         print(r.stdout)
         print(r.stderr)
         return False
-    r2 = subprocess.run([binpath], capture_output=True, text=True)
+
+    run_args = [binpath, "--include-ignored"] if is_test_file else [binpath]
+    r2 = subprocess.run(run_args, capture_output=True, text=True)
     print(r2.stdout)
     if r2.returncode != 0:
         print(r2.stderr)

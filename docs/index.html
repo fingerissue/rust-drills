@@ -206,18 +206,28 @@ function openDetail(ci, si) {
     detailBody.appendChild(div);
   } else {
     currentTab = 'problem';
+    const hasNote = !!(sec.note && sec.note.trim());
 
     const tabBar = document.createElement('div');
     tabBar.className = 'tab-bar';
     tabBar.innerHTML = `
       <button class="tab-btn active" data-tab="problem">문제 (TODO)</button>
       <button class="tab-btn" data-tab="answer">정답 보기</button>
+      ${hasNote ? '<button class="tab-btn" data-tab="note">개념 설명</button>' : ''}
     `;
     detailBody.appendChild(tabBar);
 
     const textarea = document.createElement('textarea');
     textarea.value = sec.problem;
     detailBody.appendChild(textarea);
+
+    const noteDiv = document.createElement('div');
+    noteDiv.className = 'note-content';
+    noteDiv.style.display = 'none';
+    if (hasNote) {
+      noteDiv.innerHTML = renderNote(sec.note);
+      detailBody.appendChild(noteDiv);
+    }
 
     const actionBar = document.createElement('div');
     actionBar.className = 'action-bar';
@@ -232,7 +242,16 @@ function openDetail(ci, si) {
         tabBar.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         currentTab = btn.dataset.tab;
-        textarea.value = currentTab === 'problem' ? sec.problem : sec.answer;
+        if (currentTab === 'note') {
+          textarea.style.display = 'none';
+          noteDiv.style.display = 'block';
+          actionBar.style.display = 'none';
+        } else {
+          textarea.style.display = 'block';
+          noteDiv.style.display = 'none';
+          actionBar.style.display = 'flex';
+          textarea.value = currentTab === 'problem' ? sec.problem : sec.answer;
+        }
       };
     });
 

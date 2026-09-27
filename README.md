@@ -23,6 +23,7 @@
 - [x] 04. 중급: Rust 특징
 - [x] 05. 고급 I: Rust 응용 필수
 - [x] 06. 고급 II: 라이브러리 활용
+- [x] 07. 부록: 책엔 없지만 알아두면 좋은 개념 (Rc/RefCell/Weak, 테스트, From/Into, 클로저 심화)
 
 문제은행(전체 목차)은 이미 완성된 상태고, 위 체크는 문제은행 기준이다.
 **실제로 "오늘 몇 챕터까지 풀었다"는 진도는 커밋 히스토리로 확인**하는 게 정확하다
@@ -44,7 +45,20 @@
 04. 중급 Rust 특징/              (4.1 ~ 4.9, 9개 섹션)
 05. 고급 I Rust 응용 필수/        (5.1 ~ 5.6, 5.5만 별도 Cargo 프로젝트)
 06. 고급 II 라이브러리 활용/      (6.1~6.3, 6.6은 코드 / 6.4, 6.5는 개념정리.md)
+07. 부록/                        (책엔 없지만 필수급 개념 4개 - 7.1~7.4, 전부 개념설명.md 포함)
 ```
+
+`07. 부록`은 책 목차엔 없지만 실무에서 자주 쓰여서 추가한 챕터다. 여기만 다른 챕터와 달리
+`problem.rs`/`answer.rs` 외에 **`개념설명.md`**가 항상 같이 들어있다 (다른 챕터의 `개념정리.md`는
+코드 문제가 없는 경우에만 있었는데, 7장은 코드 문제 + 개념 설명을 항상 같이 준다).
+
+- 7.1 Rc\<T\>, RefCell\<T\>, Weak\<T\> — 공유 소유권과 내부 가변성 (트리/그래프 구조에 필수)
+- 7.2 테스트 (`#[test]`, `cargo test`) — 이 폴더만 예외적으로 `rustc --test`로 컴파일해야 함
+  ```bash
+  rustc --test problem.rs -o problem_test && ./problem_test
+  ```
+- 7.3 타입 변환 (From, Into, TryFrom, TryInto)
+- 7.4 클로저 심화 (Fn, FnMut, FnOnce, move)
 
 각 하위 폴더는 보통 `problem.rs`(TODO를 채우는 문제) + `answer.rs`(정답) 짝으로 구성되고,
 코드가 없는 챕터(1.1, 1.2)나 개념 위주 챕터(3.4, 6.4, 6.5)는 `개념정리.md` / `체크리스트.md`로 대체했다.
@@ -87,8 +101,9 @@ https://fingerissue.github.io/rust-drills/ 에서 챕터별 문제를 보고, �
 
 `problem.rs`를 고쳐서 push하면 `.github/workflows/grade.yml`이 트리거돼서:
 1. 변경된 `problem.rs` 파일들을 찾고
-2. 표준 폴더는 `rustc`로 컴파일 후 실행, Cargo 프로젝트(5.5, 06장)는 해당 `--bin`으로 `cargo run`
-3. `main()` 안의 `assert_eq!`가 전부 통과하면 ✅, 하나라도 실패(panic)하면 ❌
+2. 표준 폴더는 `rustc`로 컴파일 후 실행, Cargo 프로젝트(5.5, 06장)는 해당 `--bin`으로 `cargo run`,
+   `#[test]`가 들어있는 파일(7.2)은 자동으로 `rustc --test`로 컴파일해서 테스트 러너로 실행
+3. `main()`의 `assert_eq!` 혹은 `#[test]` 함수들이 전부 통과하면 ✅, 하나라도 실패(panic)하면 ❌
 
 결과는 커밋의 체크(check)로 남아서 커밋 목록/PR 화면에서 바로 보이고, [Actions 탭](https://github.com/fingerissue/rust-drills/actions)에서 로그도 확인 가능.
 

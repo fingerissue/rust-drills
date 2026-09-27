@@ -29,12 +29,12 @@ for chapter_dir in sorted(os.listdir(ROOT)):
             with open(answer_path, encoding="utf-8") as f:
                 section["answer"] = f.read()
         else:
-            # checklist or concept note (.md file)
-            md_files = [f for f in os.listdir(full_sub) if f.endswith('.md')]
             section["type"] = "note"
-            if md_files:
-                with open(os.path.join(full_sub, md_files[0]), encoding="utf-8") as f:
-                    section["note"] = f.read()
+        # 코드 문제여도 개념설명.md 등이 같이 있으면 note로 같이 담는다 (7장 부록처럼)
+        md_files = [f for f in os.listdir(full_sub) if f.endswith('.md')]
+        if md_files:
+            with open(os.path.join(full_sub, md_files[0]), encoding="utf-8") as f:
+                section["note"] = f.read()
         sections.append(section)
     chapters.append({"title": chapter_dir, "sections": sections})
 
