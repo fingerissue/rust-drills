@@ -22,8 +22,10 @@ for chapter_dir in sorted(os.listdir(ROOT)):
             alt_answer = os.path.join(full_sub, "src", "bin", "answer.rs")
             if os.path.exists(alt_problem):
                 problem_path, answer_path = alt_problem, alt_answer
-        section = {"title": sub_dir, "type": "code", "problem": "", "answer": "", "note": ""}
+        section = {"title": sub_dir, "type": "code", "problem": "", "answer": "", "note": "", "path": ""}
         if os.path.exists(problem_path):
+            # 웹에서 제출(커밋)할 때 쓰는 저장소 기준 상대경로
+            section["path"] = os.path.relpath(problem_path, ROOT).replace(os.sep, "/")
             with open(problem_path, encoding="utf-8") as f:
                 section["problem"] = f.read()
             with open(answer_path, encoding="utf-8") as f:

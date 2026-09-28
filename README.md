@@ -90,9 +90,16 @@ rustc problem.rs -o problem && ./problem
 
 ### 웹 (모바일 포함)
 https://fingerissue.github.io/rust-drills/ 에서 챕터별 문제를 보고, 에디터에서 TODO를 채운 뒤
-"Rust Playground에서 실행" 버튼으로 컴파일/실행 결과를 확인할 수 있다.
+**"제출(커밋) & 채점"** 을 누르면 `grass` 브랜치에 `problem.rs`가 바로 커밋되고, 이어서 도는 Actions 채점 결과(✅/❌)가 화면에 표시된다.
+작성 중인 코드는 브라우저에 자동 임시저장된다.
+"Rust Playground에서 실행" 버튼으로 채점 전에 미리 돌려볼 수도 있다
 (정적 호스팅이라 브라우저 안에서 직접 컴파일은 불가 — 탭 한 번으로 Playground로 코드를 넘기는 방식.
 `5.5`, `6.1~6.3`, `6.6`처럼 외부 크레이트가 필요한 문제는 Playground에서 안 돌아갈 수 있어서 로컬 cargo 권장)
+
+**제출 기능 설정 (처음 한 번)**: 페이지 상단 `🔑 GitHub 토큰 설정` 버튼에 fine-grained 토큰을 붙여넣는다.
+- 토큰 범위: 이 레포 하나만, 권한은 **Contents: Read and write** + **Actions: Read-only**
+- 토큰은 그 브라우저의 localStorage에만 저장되고 `api.github.com` 외에는 전송되지 않는다 (기기를 바꾸면 다시 설정)
+- 정답 탭의 내용은 제출되지 않고, `todo!()`가 남아있으면 확인창이 뜬다
 
 `docs/data.js`는 각 폴더의 `problem.rs`/`answer.rs`/`.md`를 모아놓은 파일이라,
 새 챕터 추가 시 `python3 scripts/gen_data.py`로 재생성해야 한다.

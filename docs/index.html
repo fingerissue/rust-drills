@@ -104,6 +104,13 @@
   .action-btn.primary { background: var(--accent); color: #1e1e2e; }
   .action-btn.secondary { background: var(--bg-alt); color: var(--text); border: 1px solid var(--border); }
 
+  .action-btn.submit { background: var(--accent2); color: #1e1e2e; }
+  .action-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  #grade-result { margin-top: 12px; padding: 12px; border-radius: 10px; font-size: 0.9rem; display: none; line-height: 1.5; }
+  #grade-result.pending { display: block; background: var(--bg-alt); border: 1px solid var(--border); }
+  #grade-result.success { display: block; background: #1f3a2a; border: 1px solid var(--accent2); }
+  #grade-result.failure { display: block; background: #3a1f1f; border: 1px solid #e06c6c; }
+  .token-btn { background: none; border: 1px solid var(--border); color: var(--text-dim); border-radius: 8px; padding: 4px 10px; font-size: 0.75rem; cursor: pointer; margin-top: 6px; }
   footer { text-align: center; color: var(--text-dim); font-size: 0.75rem; padding: 20px 12px 40px; }
   a { color: var(--accent); }
 </style>
@@ -114,6 +121,7 @@
   <h1>🦀 rust-drills</h1>
   <p>Just Do Rust 복습용 문제 · 탭해서 풀고 Playground에서 실행</p>
   <p>기획 <a href="https://github.com/fingerissue" target="_blank">@fingerissue</a></p>
+  <button class="token-btn" id="token-btn"></button>
 </header>
 
 <div id="chapter-list"></div>
@@ -134,6 +142,7 @@
 </div>
 
 <script src="data.js"></script>
+<script src="github.js"></script>
 <script>
 const listEl = document.getElementById('chapter-list');
 const detailEl = document.getElementById('detail');
@@ -217,8 +226,10 @@ function openDetail(ci, si) {
     `;
     detailBody.appendChild(tabBar);
 
+    const draftKey = 'rd_draft:' + sec.path;
+    const loadDraft = () => { try { return localStorage.getItem(draftKey); } catch (e) { return null; } };
     const textarea = document.createElement('textarea');
-    textarea.value = sec.problem;
+    textarea.value = loadDraft() || sec.problem;
     detailBody.appendChild(textarea);
 
     const noteDiv = document.createElement('div');
@@ -233,9 +244,16 @@ function openDetail(ci, si) {
     actionBar.className = 'action-bar';
     actionBar.innerHTML = `
       <button class="action-btn primary" id="run-btn">▶ Rust Playground에서 실행</button>
+      <button class="action-btn submit" id="submit-btn">✔ 제출(커밋) &amp; 채점</button>
       <button class="action-btn secondary" id="reset-btn">↺ 초기화</button>
     `;
     detailBody.appendChild(actionBar);
+
+    const gradeResult = document.createElement('div');
+    gradeResult.id = 'grade-result';
+    detailBody.appendChild(gradeResult);
+
+    const submitBtn = document.getElementById('submit-btn');
 
     tabBar.querySelectorAll('.tab-btn').forEach(btn => {
       btn.onclick = () => {
@@ -250,16 +268,58 @@ function openDetail(ci, si) {
           textarea.style.display = 'block';
           noteDiv.style.display = 'none';
           actionBar.style.display = 'flex';
-          textarea.value = currentTab === 'problem' ? sec.problem : sec.answer;
+          // 제출은 '문제' 탭의 내 코드만 가능 (정답 탭 내용을 problem.rs로 커밋하는 사고 방지)
+          submitBtn.style.display = currentTab === 'problem' ? '' : 'none';
+          textarea.value = currentTab === 'problem' ? (loadDraft() || sec.problem) : sec.answer;
         }
       };
+    });
+
+    // 문제 탭에서 작성 중인 코드는 브라우저에 자동 임시저장
+    textarea.addEventListener('input', () => {
+      if (currentTab !== 'problem') return;
+      try { localStorage.setItem(draftKey, textarea.value); } catch (e) { /* ignore */ }
     });
 
     document.getElementById('run-btn').onclick = () => {
       window.open(playgroundUrl(textarea.value), '_blank');
     };
     document.getElementById('reset-btn').onclick = () => {
-      textarea.value = currentTab === 'problem' ? sec.problem : sec.answer;
+      if (currentTab === 'problem') {
+        if (!confirm('작성한 코드를 지우고 원래 문제로 되돌릴까?')) return;
+        try { localStorage.removeItem(draftKey); } catch (e) { /* ignore */ }
+        textarea.value = sec.problem;
+      } else {
+        textarea.value = sec.answer;
+      }
+    };
+
+    submitBtn.onclick = async () => {
+      const token = getToken();
+      if (!token) { alert('먼저 상단의 🔑 버튼으로 GitHub 토큰을 설정해줘.'); return; }
+      if (currentTab !== 'problem') return;
+      if (/todo!\(\)/.test(textarea.value) &&
+          !confirm('아직 todo!()가 남아있어. 그래도 제출할까? (채점은 실패로 나올 거야)')) return;
+
+      submitBtn.disabled = true;
+      const setResult = (cls, html) => { gradeResult.className = cls; gradeResult.innerHTML = html; };
+      try {
+        setResult('pending', '커밋 중...');
+        const commitSha = await commitFile(token, sec.path, textarea.value, 'solve: ' + sec.title);
+        setResult('pending', '커밋 완료 (' + commitSha.slice(0, 7) + '). 채점 대기 중...');
+        const result = await waitForGrade(token, commitSha, msg => setResult('pending', msg));
+        if (result.state === 'success') {
+          setResult('success', '✅ 통과! <a href="' + result.url + '" target="_blank">채점 로그 보기</a>');
+        } else if (result.state === 'failure') {
+          setResult('failure', '❌ 실패 - 어디서 막혔는지 <a href="' + result.url + '" target="_blank">채점 로그</a>에서 확인해봐.');
+        } else {
+          setResult('pending', '결과를 기다리다 시간이 초과됐어. <a href="' + result.url + '" target="_blank">Actions 탭</a>에서 직접 확인해줘.');
+        }
+      } catch (e) {
+        setResult('failure', '❌ ' + e.message);
+      } finally {
+        submitBtn.disabled = false;
+      }
     };
   }
 
@@ -271,6 +331,25 @@ document.getElementById('back-btn').onclick = () => {
   detailEl.classList.remove('open');
 };
 
+function getToken() {
+  try { return localStorage.getItem('rd_token') || ''; } catch (e) { return ''; }
+}
+function refreshTokenBtn() {
+  document.getElementById('token-btn').textContent = getToken() ? '🔑 토큰 설정됨 (변경/삭제)' : '🔑 GitHub 토큰 설정 (제출용)';
+}
+document.getElementById('token-btn').onclick = () => {
+  const cur = getToken();
+  const msg = '이 레포 하나에만 Contents(Read and write) + Actions(Read-only) 권한을 준 fine-grained 토큰을 붙여넣어줘.\n' +
+    '이 브라우저 localStorage에만 저장돼. 삭제하려면 빈 칸으로 확인.' + (cur ? '\n(현재 설정됨)' : '');
+  const v = prompt(msg, '');
+  if (v === null) return;
+  try {
+    if (v.trim()) localStorage.setItem('rd_token', v.trim()); else localStorage.removeItem('rd_token');
+  } catch (e) { alert('이 브라우저에선 토큰을 저장할 수 없어.'); }
+  refreshTokenBtn();
+};
+
+refreshTokenBtn();
 buildChapterList();
 </script>
 
