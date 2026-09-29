@@ -19,8 +19,14 @@ def get_changed_files() -> list[str]:
     before = os.environ.get("BEFORE_SHA", "")
     after = os.environ.get("AFTER_SHA", "HEAD")
 
+    # -c core.quotePath=false: 한글 등 비-ASCII 파일명을 8진수 이스케이프+따옴표로 감싸지 않고
+    # 그대로 출력하게 함. 이게 없으면 한글 경로의 problem.rs가 "...problem.rs" 처럼 끝에
+    # 따옴표가 붙어서 나와, endswith("problem.rs") 검사가 전부 실패해 "변경 없음"으로
+    # 잘못 처리되는(=채점 없이 항상 통과되는) 버그가 있었다.
+    GIT = ["git", "-c", "core.quotePath=false"]
+
     def run_diff(a: str, b: str) -> str | None:
-        r = subprocess.run(["git", "diff", "--name-only", a, b], capture_output=True, text=True)
+        r = subprocess.run(GIT + ["diff", "--name-only", a, b], capture_output=True, text=True)
         return r.stdout if r.returncode == 0 else None
 
     out = None
@@ -32,7 +38,7 @@ def get_changed_files() -> list[str]:
     if out is None:
         # 그래도 안 되면 이번 커밋에 포함된 파일 전체
         r = subprocess.run(
-            ["git", "show", "--name-only", "--pretty=", "HEAD"], capture_output=True, text=True
+            GIT + ["show", "--name-only", "--pretty=", "HEAD"], capture_output=True, text=True
         )
         out = r.stdout
 
