@@ -52,9 +52,11 @@ async function commitFile(token, path, content, message) {
   return (await res.json()).commit.sha;
 }
 
-// 특정 커밋에서 돌아간 Actions 실행을 찾는다 (없으면 null)
+// 특정 커밋에서 돌아간 "채점" 워크플로(grade.yml) 실행을 찾는다 (없으면 null).
+// 주의: 같은 push에 GitHub Pages 배포 워크플로도 같이 돌기 때문에, 워크플로를 지정하지 않고
+// 전체 실행 목록에서 가져오면 채점이 아니라 배포 결과를 잘못 읽어올 수 있다.
 async function findRun(token, commitSha) {
-  const url = `${GH.api}/repos/${GH.owner}/${GH.repo}/actions/runs?head_sha=${commitSha}&per_page=5`;
+  const url = `${GH.api}/repos/${GH.owner}/${GH.repo}/actions/workflows/grade.yml/runs?head_sha=${commitSha}&per_page=5`;
   const res = await fetch(url, { headers: ghHeaders(token) });
   if (!res.ok) throw await ghError(res, 'Actions 실행 조회');
   const data = await res.json();
