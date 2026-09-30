@@ -11,5 +11,10 @@ fn main() {
 fn get_sum(n: u32) -> u32 {
     // TODO: mut 변수 sum을 0으로 선언하고,
     // for 루프(1..=n)를 돌면서 sum에 i를 더한 뒤 반환해라.
-    todo!()
+    let mut sum = 0;
+    
+    for i in 1..=n {
+        sum += i;
+    }
+    return sum;
 }
