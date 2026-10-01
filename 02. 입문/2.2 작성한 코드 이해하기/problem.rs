@@ -11,10 +11,19 @@
 fn main() {
     let result = get_product(5);
     // TODO: println! 인라인 변수 문법으로 "1*...*5={result}" 출력
+    println!("1*...*5={result}");
 }
 
 fn get_product(n: u32) -> u32 {
     // TODO: mut 변수 product를 1로, i를 1로 선언하고
     // while i <= n 조건으로 product *= i, i += 1 을 반복한 뒤 product 반환
-    todo!()
+    let mut product: u32 = 1;
+    let mut i: u32 = 1;
+    
+    while i <= n {
+        product *= i;
+        i += 1;
+    }
+
+    return product;
 }
