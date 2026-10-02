@@ -19,7 +19,7 @@ fn format_price(amount: f64) -> String {
 
 // [문제 4] 정렬/폭 지정 - 이름은 왼쪽 정렬 10칸({:<10}), 점수는 오른쪽 정렬 5칸({:>5})
 fn format_table_row(name: &str, score: i32) -> String {
-    return format!("{name:<10} {score:>5}");
+    return format!("{name:<10}{score:>5}");
 }
 
 // [문제 5] 이름 붙은 인자(named argument) 인라인 문법 사용 - "저는 {name}이고 {age}살이에요"
