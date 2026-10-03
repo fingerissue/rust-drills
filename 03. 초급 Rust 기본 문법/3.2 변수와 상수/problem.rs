@@ -3,27 +3,34 @@
 
 // [문제 1] shadowing - x에 5를 넣고 그 값+1로 shadowing해서 반환
 fn shadow_example() -> i32 {
-    todo!()
+    let x: i32 = 5;
+    let x = x + 1;
+    return x;
 }
 
 // [문제 2] shadowing으로 타입 바꾸기 - &str을 받아서 길이(usize)로 shadowing
 fn shadow_type_change(spaces: &str) -> usize {
-    todo!()
+    let spaces: usize = spaces.len();
+    return spaces;
 }
 
 // [문제 3] mut - start에서 시작해서 n번 1씩 증가시킨 값 반환
 fn increment_n_times(start: i32, n: u32) -> i32 {
-    todo!()
+    let mut x: i32 = start;
+    x += n as i32;
+    return x;
 }
 
 // [문제 4] const - 함수 내부에 PI를 const로 선언하고 원의 넓이(PI*r*r) 계산
 fn circle_area(radius: f64) -> f64 {
-    todo!()
+    const PI: f64 = std::f64::consts::PI;
+    PI * radius * radius
 }
 
 // [문제 5] 튜플 구조 분해로 합과 차를 한 번에 계산해서 (합, 차) 튜플로 반환
 fn sum_and_diff(a: i32, b: i32) -> (i32, i32) {
-    todo!()
+    let (sum, diff) = (a + b, a - b);
+    (sum, diff)
 }
 
 fn main() {
