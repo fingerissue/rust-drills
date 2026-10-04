@@ -3,22 +3,24 @@
 
 // [문제 1] 정수 타입 캐스팅(as 키워드) - i32 두 개를 f64로 변환해서 평균 구하기
 fn average(a: i32, b: i32) -> f64 {
-    todo!()
+    let a: f64 = a as f64;
+    let b: f64 = b as f64;
+    (a + b) / 2.0
 }
 
 // [문제 2] char 메서드 - 알파벳 대문자인지 판별 (is_ascii_uppercase 활용)
 fn is_upper_alpha(c: char) -> bool {
-    todo!()
+    c.is_ascii_uppercase()
 }
 
 // [문제 3] 튜플 인덱싱 - (이름, 나이, 키) 튜플에서 나이(.1)만 뽑아 반환
 fn get_age(person: (&str, u8, f32)) -> u8 {
-    todo!()
+    person.1
 }
 
 // [문제 4] 배열 슬라이싱 - [i32; 5] 배열의 앞 3개 원소 합
 fn sum_first_three(arr: [i32; 5]) -> i32 {
-    todo!()
+    arr[..3].iter().sum()
 }
 
 // [문제 5] 디폴트 값 - Default 트레잇으로 기본값을 만들고 retries 필드만 원하는 값으로 바꾸기
@@ -29,12 +31,12 @@ struct Config {
     name: String,
 }
 fn default_config_with_retries(retries: u8) -> Config {
-    todo!()
+    Config{ retries, ..Default::default() }
 }
 
 // [문제 6] 불리언 로직 - VIP거나(||) 구매금액이 10만원 이상이면 할인 대상
 fn is_eligible_for_discount(is_vip: bool, amount: u32) -> bool {
-    todo!()
+    is_vip || amount >= 100000
 }
 
 fn main() {
